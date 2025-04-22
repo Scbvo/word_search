@@ -1,1 +1,79 @@
-.ws-area{background:#fafafa;display:inline-block;padding:20px;border-radius:10px;-moz-user-select:-moz-none;-khtml-user-select:none;-webkit-user-select:none;-ms-user-select:none}.ws-row{line-height:0}.ws-col{cursor:pointer}.ws-col.ws-selected{background:yellow}.ws-found{background:red}
+/* === Word Search Puzzle – Custom French Task CSS === */
+
+/* General grid container */
+.ws-area {
+  margin: 20px auto;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Rows of the grid */
+.ws-row {
+  display: flex;
+  justify-content: center;
+}
+
+/* Each letter cell */
+.ws-col {
+  border: 1px solid #999;
+  width: 25px;
+  height: 25px;
+  cursor: default;
+  user-select: none;
+  transition: background-color 0.2s;
+}
+
+/* Hide selection feedback (when hovering) */
+.ws-selected {
+  background-color: transparent !important;
+  border: none !important;
+}
+
+/* Highlighted (found) word */
+.ws-found {
+  background-color: #d0ffd0 !important;
+}
+
+/* Word list styles */
+.ws-words {
+  list-style-type: none;
+  padding-left: 0;
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+/* Individual word in the list */
+.ws-word {
+  font-family: "Arial", sans-serif;
+  font-size: 16px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background-color: #f8f8f8;
+  transition: all 0.2s;
+}
+
+/* Visually strike through found words */
+.ws-word[line-through],
+.ws-word.found {
+  text-decoration: line-through;
+  color: #999;
+  background-color: #e0e0e0;
+}
+
+/* Score area */
+#score {
+  font-weight: bold;
+  font-family: "Arial", sans-serif;
+  margin-bottom: 12px;
+}
+
+/* Disable any blue highlight from clicking */
+canvas:focus {
+  outline: none;
+  box-shadow: none;
+}
