@@ -10,8 +10,9 @@
     this.wrapEl.classList.add('ws-area');
 
     const default_settings = {
-      directions: ['W', 'N', 'WN', 'EN', 'SW', 'NE', 'S', 'E'],
-      gridSize: 12,
+      directions: ['W', 'N'], // Left-to-right and top-to-bottom only
+      gridCols: 12,
+      gridRows: 9,
       words: [],
       debug: false,
       condition: 0,
@@ -21,13 +22,13 @@
 
     this.settings = Object.assign({}, default_settings, settings);
 
-    if (this.parseWords(this.settings.gridSize)) {
+    if (this.parseWords()) {
       let isWorked = false;
 
       while (!isWorked) {
         this.initialize();
         if (this.settings.same) {
-          isWorked = this.bobmatrix(this.settings.gridSize);
+          isWorked = this.bobmatrix();
         } else {
           isWorked = this.addWords();
         }
@@ -43,11 +44,11 @@
     }
   }
 
-  WordSeach.prototype.parseWords = function(maxSize) {
+  WordSeach.prototype.parseWords = function() {
     let itWorked = true;
     for (let i = 0; i < this.settings.words.length; i++) {
       this.settings.words[i] = this.settings.words[i].toUpperCase();
-      if (this.settings.words[i].length > maxSize) {
+      if (this.settings.words[i].length > this.settings.gridCols && this.settings.words[i].length > this.settings.gridRows) {
         alert('Le mot `' + this.settings.words[i] + '` est trop long pour la grille.');
         itWorked = false;
       }
@@ -60,9 +61,9 @@
     this.selectFrom = null;
     this.selected = [];
 
-    for (let row = 0; row < this.settings.gridSize; row++) {
+    for (let row = 0; row < this.settings.gridRows; row++) {
       this.matrix[row] = [];
-      for (let col = 0; col < this.settings.gridSize; col++) {
+      for (let col = 0; col < this.settings.gridCols; col++) {
         this.matrix[row][col] = { letter: '.', row: row, col: col };
       }
     }
@@ -91,29 +92,20 @@
 
   WordSeach.prototype.addWord = function(word, direction) {
     const directions = {
-      'W': [0, 1],
-      'N': [1, 0],
-      'WN': [1, 1],
-      'EN': [1, -1],
-      'E': [0, -1],
-      'S': [-1, 0],
-      'SW': [-1, -1],
-      'NE': [-1, 1]
+      'W': [0, 1],   // Horizontal: left to right
+      'N': [1, 0]    // Vertical: top to bottom
     };
 
     let row, col;
     switch (direction) {
       case 'W':
-        row = Math.floor(Math.random() * this.settings.gridSize);
-        col = Math.floor(Math.random() * (this.settings.gridSize - word.length));
+        row = Math.floor(Math.random() * this.settings.gridRows);
+        col = Math.floor(Math.random() * (this.settings.gridCols - word.length));
         break;
       case 'N':
-        row = Math.floor(Math.random() * (this.settings.gridSize - word.length));
-        col = Math.floor(Math.random() * this.settings.gridSize);
+        row = Math.floor(Math.random() * (this.settings.gridRows - word.length));
+        col = Math.floor(Math.random() * this.settings.gridCols);
         break;
-      default:
-        row = Math.floor(Math.random() * (this.settings.gridSize - word.length));
-        col = Math.floor(Math.random() * (this.settings.gridSize - word.length));
     }
 
     let itWorked = true;
@@ -140,8 +132,8 @@
   }
 
   WordSeach.prototype.fillUpFools = function() {
-    for (let row = 0; row < this.settings.gridSize; row++) {
-      for (let col = 0; col < this.settings.gridSize; col++) {
+    for (let row = 0; row < this.settings.gridRows; row++) {
+      for (let col = 0; col < this.settings.gridCols; col++) {
         if (this.matrix[row][col].letter === '.') {
           this.matrix[row][col].letter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
         }
@@ -150,12 +142,12 @@
   }
 
   WordSeach.prototype.drawmatrix = function() {
-    for (let row = 0; row < this.settings.gridSize; row++) {
+    for (let row = 0; row < this.settings.gridRows; row++) {
       const divEl = document.createElement('div');
       divEl.classList.add('ws-row');
       this.wrapEl.appendChild(divEl);
 
-      for (let col = 0; col < this.settings.gridSize; col++) {
+      for (let col = 0; col < this.settings.gridCols; col++) {
         const cvEl = document.createElement('canvas');
         cvEl.classList.add('ws-col');
         cvEl.width = 25;
@@ -248,4 +240,5 @@
     }
   }
 })();
+
 
